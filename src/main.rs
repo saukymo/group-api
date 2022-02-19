@@ -1,13 +1,21 @@
+use dotenv::dotenv;
 use tide::prelude::*;
-use tide::{Middleware, Next, Request, Result};
+use sqlx::Pool;
+use sqlx::PgPool;
+use tide::{Middleware, Next, Request, Result, Body};
 use serde::{Deserialize, Serialize};
+
+mod routes;
+mod models;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct GroupResponse { 
     #[serde(skip_serializing_if = "Option::is_none")]
     path: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    user_id: Option<i32>,
+    user: Option<models::users::User>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    users: Option<Vec<models::users::User>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     game_id: Option<i32>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -20,7 +28,13 @@ struct GroupResponse {
     appointment_id: Option<i32>
 }
 
-mod routes;
+
+
+#[derive(Clone, Debug)]
+pub struct State {
+    pool: PgPool
+}
+
 
 struct ReturnPathMiddleWare;
 
@@ -33,21 +47,52 @@ impl<State: Clone + Send + Sync + 'static> Middleware<State> for ReturnPathMiddl
         let method = req.method().to_string();
         let path = req.url().path().to_string();
         let mut res = next.run(req).await;
-        let body = res.take_body();
 
-        let mut response: GroupResponse = body.into_json().await?;
-        response.path = Some(format!("{method} {path}"));
+        println!("{:?}", res);
 
-        res.set_body(json!(&response));
+        match res.take_error() {
+            None => {
+                let body = res.take_body();
+
+                let mut response: GroupResponse = body.into_json().await?;
+                response.path = Some(format!("{method} {path}"));
+
+                res.set_body(json!(&response));
+            },
+            Some(error) => {
+
+                println!("Error: {:?}", error);
+
+                let response = Body::from_json(
+                    &json!({
+                        "status": "error",
+                        "message": error.to_string()
+                    })
+                )?;
+
+                res.set_body(response);
+                res.set_status(400);
+            }
+        }
+        
         Ok(res)
     }
 }
 
-
 #[async_std::main]
 async fn main() -> tide::Result<()> {
+    dotenv().ok();
+
     tide::log::start();
-    let mut app = tide::new();
+    
+
+    let database_url = std::env::var("DATABASE_URL")?;
+    let pool = Pool::connect(&database_url).await?;
+    let state = State {
+        pool,
+    };
+
+    let mut app = tide::with_state(state);
     app.with(ReturnPathMiddleWare);
 
     app
@@ -85,6 +130,7 @@ async fn main() -> tide::Result<()> {
         .at("/:appointment_id")
             .get(|req| async move { routes::appointments::get_appointment(req).await })
             .patch(|req| async move { routes::appointments::update_appointment(req).await})
+            // Only user, owner or admins can delete appointment.
             .delete(|req| async move { routes::appointments::delete_appointment(req).await});
 
     // // proposal is belong to a asset so that is also belong to a vendor
@@ -94,6 +140,7 @@ async fn main() -> tide::Result<()> {
         .at("/:proposal_id")
             .get(|req| async move { routes::proposals::get_proposal(req).await })
             .patch(|req| async move { routes::proposals::update_proposal(req).await})
+            // Only owner or admins can delete proposal.
             .delete(|req| async move { routes::proposals::delete_proposal(req).await})
             .at("/appointments")
                 .get(|req| async move { routes::proposals::get_appointments(req).await });
