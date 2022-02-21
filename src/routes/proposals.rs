@@ -1,5 +1,4 @@
 use super::*;
-use tide::prelude::*;
 use tide::{Request, Result, Response, Body};
 
 pub async fn get_proposals(_request: Request<State>) -> Result {

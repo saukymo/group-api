@@ -2,7 +2,7 @@ use dotenv::dotenv;
 use tide::prelude::*;
 use sqlx::Pool;
 use sqlx::PgPool;
-use tide::{Middleware, Next, Request, Result, Body};
+use tide::{Middleware, Next, Request, Result, Body, StatusCode};
 use serde::{Deserialize, Serialize};
 
 mod routes;
@@ -17,15 +17,23 @@ struct GroupResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
     users: Option<Vec<models::users::User>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    game_id: Option<i32>,
+    game: Option<models::games::Game>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    games: Option<Vec<models::games::Game>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     proposal_id: Option<i32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     asset_id: Option<i32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    vendor_id: Option<i32>,
+    vendor: Option<models::vendors::Vendor>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    appointment_id: Option<i32>
+    vendors: Option<Vec<models::vendors::Vendor>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    appointment_id: Option<i32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    status: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    message: Option<String>
 }
 
 
@@ -71,7 +79,7 @@ impl<State: Clone + Send + Sync + 'static> Middleware<State> for ReturnPathMiddl
                 )?;
 
                 res.set_body(response);
-                res.set_status(400);
+                res.set_status(StatusCode::BadRequest);
             }
         }
         
