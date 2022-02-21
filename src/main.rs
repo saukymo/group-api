@@ -21,15 +21,21 @@ struct GroupResponse {
     #[serde(skip_serializing_if = "Option::is_none")]
     games: Option<Vec<models::games::Game>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    proposal_id: Option<i32>,
+    proposal: Option<models::proposals::Proposal>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    asset_id: Option<i32>,
+    proposals: Option<Vec<models::proposals::Proposal>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    asset: Option<models::assets::Asset>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    assets: Option<Vec<models::assets::Asset>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     vendor: Option<models::vendors::Vendor>,
     #[serde(skip_serializing_if = "Option::is_none")]
     vendors: Option<Vec<models::vendors::Vendor>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    appointment_id: Option<i32>,
+    appointment: Option<models::appointments::Appointment>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    appointments: Option<Vec<models::appointments::Appointment>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     status: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -74,7 +80,8 @@ impl<State: Clone + Send + Sync + 'static> Middleware<State> for ReturnPathMiddl
                 let response = Body::from_json(
                     &json!({
                         "status": "error",
-                        "message": error.to_string()
+                        "message": error.to_string(),
+                        "path": format!("{method} {path}")
                     })
                 )?;
 

@@ -30,13 +30,13 @@ impl User {
     // }
     
     pub async fn get_users(pg_conn: &PgPool) -> tide::Result<Vec<User>> {
-        let users = query_as!(User, r#"Select user_id, name, wx_open_id from users"#).fetch_all(pg_conn).await?;
+        let users = query_as!(User, r#"SELECT user_id, name, wx_open_id FROM users"#).fetch_all(pg_conn).await?;
 
         Ok(users)
     }
 
     pub async fn get_user_by_user_id(user_id: i32, pg_conn: &PgPool) -> tide::Result<Option<User>> {
-        let user = query_as!(User, r#"Select user_id, name, wx_open_id from users where user_id=$1"#, user_id).fetch_optional(pg_conn).await?;
+        let user = query_as!(User, r#"SELECT user_id, name, wx_open_id FROM users where user_id=$1"#, user_id).fetch_optional(pg_conn).await?;
 
         Ok(user)
     }

@@ -22,6 +22,11 @@ pub struct NewGame {
     pub cover: Option<String>
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GameID {
+    pub game_id: i32
+}
+
 impl Game {
     pub async fn add_new_game(new_game: NewGame, pg_conn: &PgPool) -> tide::Result<Game> {
         let created_game = query_as!(Game, r#"

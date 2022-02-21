@@ -64,7 +64,15 @@ pub async fn get_proposals(request: Request<State>) -> Result {
 }
 
 pub async fn get_assets(request: Request<State>) -> Result {
+    let vendor_id = request.param("vendor_id")?.parse::<i32>()?;
+
+    let db_pool = request.state().pool.clone();
+
+    let games = Vendor::get_games_by_vendor_id(vendor_id, &db_pool).await?;
+
     let mut res = Response::new(200);
-    res.set_body(Body::from_json(&json!({"vendor_id": request.param("vendor_id")?.parse::<i32>()? }))?);
+    res.set_body(Body::from_json(&json!({
+        "games": games
+    }))?);
     Ok(res)
 }
