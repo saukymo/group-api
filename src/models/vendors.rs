@@ -33,7 +33,7 @@ impl Vendor {
     }
 
     pub async fn get_vendor_by_vendor_id(vendor_id: i32, pg_conn: &PgPool) -> tide::Result<Option<Vendor>> {
-        let vendor = query_as!(Vendor, r#"SELECT vendor_id, name, address, avatar FROM vendors where vendor_id=$1"#, vendor_id).fetch_optional(pg_conn).await?;
+        let vendor = query_as!(Vendor, r#"SELECT vendor_id, name, address, avatar FROM vendors WHERE vendor_id=$1"#, vendor_id).fetch_optional(pg_conn).await?;
 
         Ok(vendor)
     }
