@@ -1,31 +1,6 @@
-use tide::prelude::*;
 use sqlx::{query_as, PgPool};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Game {
-    pub game_id: i32,
-    pub name: String,
-    pub author: Option<String>,
-    pub publisher: Option<String>,
-    pub description: String,
-    pub quota: i32,
-    pub cover: Option<String>
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct NewGame {
-    pub name: String,
-    pub author: Option<String>,
-    pub publisher: Option<String>,
-    pub description: String,
-    pub quota: i32,
-    pub cover: Option<String>
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct GameID {
-    pub game_id: i32
-}
+use crate::models::models::{NewGame, Game};
 
 impl Game {
     pub async fn add_new_game(new_game: NewGame, pg_conn: &PgPool) -> tide::Result<Game> {

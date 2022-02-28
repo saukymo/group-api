@@ -1,7 +1,7 @@
 use super::*;
-use tide::{Request, Result, Response, Body, StatusCode};
+use tide::Response;
 
-use crate::models::users::{NewUser, User};
+use crate::models::models::{NewUser, User};
 
 pub async fn get_users(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();

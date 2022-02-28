@@ -1,18 +1,6 @@
-use tide::prelude::*;
 use sqlx::{query_as, PgPool};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Appointment {
-    pub appointment_id: i32,
-    pub proposal_id: i32,
-    pub user_id: i32
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct NewAppointment {
-    pub proposal_id: i32,
-    pub user_id: i32
-}
+use crate::models::models::{NewAppointment, Appointment};
 
 impl Appointment {
     pub async fn add_new_appointment(new_appointment: NewAppointment, pg_conn: &PgPool) -> tide::Result<Appointment> {

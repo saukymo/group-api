@@ -1,30 +1,6 @@
-use tide::prelude::*;
 use sqlx::{query_as, PgPool};
-use chrono::{DateTime, Utc};
-use serde_with::{serde_as, TimestampSeconds};
 
-#[serde_as]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Proposal {
-    pub proposal_id: i32,
-    pub vendor_id: i32,
-    pub asset_id: i32,
-    pub price: i32,
-    #[serde_as(as = "TimestampSeconds<i64>")]
-    pub date_time: DateTime<Utc>,
-    pub quota: i32
-}
-
-#[serde_as]
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct NewProposal {
-    pub vendor_id: i32,
-    pub asset_id: i32,
-    pub price: i32,
-    #[serde_as(as = "TimestampSeconds<i64>")]
-    pub date_time: DateTime<Utc>,
-    pub quota: i32
-}
+use crate::models::models::{NewProposal, Proposal};
 
 impl Proposal {
     pub async fn add_new_proposal(new_proposal: NewProposal, pg_conn: &PgPool) -> tide::Result<Proposal> {

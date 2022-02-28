@@ -1,22 +1,6 @@
-use tide::prelude::*;
-use sqlx::{query_as, query, PgPool};
-use crate::models::games::Game;
+use sqlx::{query_as, PgPool};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Vendor {
-    pub vendor_id: i32,
-    pub name: String,
-    pub address: Option<String>,
-    pub avatar: Option<String>
-}
-
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct NewVendor {
-    pub name: String,
-    pub address: Option<String>,
-    pub avatar: Option<String>
-}
+use crate::models::models::{Game, Asset, Vendor, NewVendor};
 
 impl Vendor {
     pub async fn add_new_vendor(new_vendor: NewVendor, pg_conn: &PgPool) -> tide::Result<Vendor> {
@@ -39,26 +23,20 @@ impl Vendor {
     }
 
     pub async fn get_games_by_vendor_id(vendor_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<Game>> {
-        let games_id = query!(r#"
-        SELECT game_id FROM assets WHERE vendor_id=$1
-        "#, vendor_id).fetch_all(pg_conn)
-        .await?
-        .iter()
-        .map(|x| x.game_id)
-        .collect::<Vec<_>>();
-
+        
+        let games_ids = Asset::get_game_id_by_vendor_id(vendor_id, pg_conn).await?;
 
         let games = query_as!(Game, r#"
-        SELECT 
-            game_id,
-            name,
-            author,
-            publisher,
-            description,
-            quota,
-            cover
-        FROM games WHERE game_id = ANY($1)
-        "#, &games_id[..]).fetch_all(pg_conn).await?;
+            SELECT 
+                game_id,
+                name,
+                author,
+                publisher,
+                description,
+                quota,
+                cover
+            FROM games WHERE game_id = ANY($1)
+            "#, &games_ids[..]).fetch_all(pg_conn).await?;
 
         Ok(games)
     }

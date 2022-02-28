@@ -1,7 +1,7 @@
 use super::*;
-use tide::{Request, Result, Response, Body, StatusCode};
+use tide::Response;
 
-use crate::models::assets::{NewAsset, Asset};
+use crate::models::models::{NewAsset, Asset};
 
 pub async fn get_assets(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();

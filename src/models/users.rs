@@ -1,18 +1,6 @@
-use tide::prelude::*;
 use sqlx::{query_as, PgPool};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct User {
-    pub user_id: i32,
-    pub name: String,
-    pub wx_open_id: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct NewUser {
-    pub name: String,
-    pub wx_open_id: Option<String>,
-}
+use crate::models::models::{NewUser, User};
 
 impl User {
 
@@ -40,4 +28,8 @@ impl User {
 
         Ok(user)
     }
+
+    // pub async fn get_appoinments_by_user_id(user_id: i32, pg_conn: &PgPool) -> tide::Result<Option<Appointment>> {
+
+    // }
 }

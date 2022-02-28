@@ -1,7 +1,7 @@
 use super::*;
-use tide::{Request, Result, Response, Body, StatusCode};
+use tide::Response;
 
-use crate::models::games::{NewGame, Game};
+use crate::models::models::{NewGame, Game};
 
 pub async fn get_games(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();

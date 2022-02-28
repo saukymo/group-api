@@ -1,7 +1,7 @@
 use super::*;
-use tide::{Request, Result, Response, Body};
+use tide::Response;
 
-use crate::models::proposals::{NewProposal, Proposal};
+use crate::models::models::{NewProposal, Proposal};
 
 pub async fn get_proposals(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();

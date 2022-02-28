@@ -1,7 +1,7 @@
 use super::*;
-use tide::{Request, Result, Response, Body, StatusCode};
+use tide::Response;
 
-use crate::models::vendors::{NewVendor, Vendor};
+use crate::models::models::{NewVendor, Vendor};
 
 pub async fn get_vendors(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();

@@ -1,7 +1,7 @@
 use super::*;
-use tide::{Request, Result, Response, Body};
+use tide::Response;
 
-use crate::models::appointments::{NewAppointment, Appointment};
+use crate::models::models::{NewAppointment, Appointment};
 
 pub async fn get_appointments(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();
@@ -47,7 +47,7 @@ pub async fn get_appointment(request: Request<State>) -> Result {
             let mut response = Response::new(StatusCode::NotFound);
             response.set_body(Body::from_json(&json!({
                 "status": "error",
-                "message": "Appointment id not found."
+                "message": "Appointment ID not found."
             }))?);
             response
         }

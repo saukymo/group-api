@@ -1,20 +1,6 @@
-use tide::prelude::*;
-use sqlx::{query_as, PgPool};
+use sqlx::{query_as, query, PgPool};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Asset {
-    pub asset_id: i32,
-    pub vendor_id: i32,
-    pub game_id: i32,
-    pub price: i32
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct NewAsset {
-    pub vendor_id: i32,
-    pub game_id: i32,
-    pub price: i32
-}
+use crate::models::models::{NewAsset, Asset};
 
 impl Asset {
     pub async fn add_new_asset(new_asset: NewAsset, pg_conn: &PgPool) -> tide::Result<Asset> {
@@ -67,5 +53,17 @@ impl Asset {
         .fetch_optional(pg_conn).await?;
 
         Ok(asset)
+    }
+
+    pub async fn get_game_id_by_vendor_id(vendor_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<i32>> {
+        let games_id = query!(r#"
+        SELECT game_id FROM assets WHERE vendor_id=$1
+        "#, vendor_id).fetch_all(pg_conn)
+        .await?
+        .iter()
+        .map(|x| x.game_id)
+        .collect::<Vec<_>>();
+
+        Ok(games_id)
     }
 }
