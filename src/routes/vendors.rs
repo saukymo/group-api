@@ -36,12 +36,26 @@ pub async fn get_vendor(request: Request<State>) -> Result {
 
     let db_pool = request.state().pool.clone();
 
-    let vendor = Vendor::get_vendor_by_vendor_id(vendor_id, &db_pool).await?;
+    let result = Vendor::get_vendor_by_vendor_id(vendor_id, &db_pool).await?;
 
-    let mut res = Response::new(StatusCode::Ok);
-    res.set_body(Body::from_json(&json!({
-        "vendor": vendor
-    }))?);
+    let res = match result {
+        Some(vendor) => {
+            let mut response = Response::new(StatusCode::Ok);
+            response.set_body(Body::from_json(&json!({
+                "vendor": vendor
+            }))?);
+            response
+        },
+        None => {
+            let mut response = Response::new(StatusCode::NotFound);
+            response.set_body(Body::from_json(&json!({
+                "status": "error",
+                "message": "Vendor ID not found."
+            }))?);
+            response
+        }
+    };
+    
     Ok(res)
 }
 

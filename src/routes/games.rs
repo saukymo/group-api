@@ -50,7 +50,7 @@ pub async fn get_game(request: Request<State>) -> Result {
             let mut response = Response::new(StatusCode::NotFound);
             response.set_body(Body::from_json(&json!({
                 "status": "error",
-                "message": "Game id not found."
+                "message": "Game ID not found."
             }))?);
             response
         }

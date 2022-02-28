@@ -35,12 +35,26 @@ pub async fn get_asset(request: Request<State>) -> Result {
 
     let db_pool = request.state().pool.clone();
 
-    let asset = Asset::get_asset_by_asset_id(asset_id, &db_pool).await?;
+    let result = Asset::get_asset_by_asset_id(asset_id, &db_pool).await?;
 
-    let mut res = Response::new(StatusCode::Ok);
-    res.set_body(Body::from_json(&json!({
-        "asset": asset
-     }))?);
+    let res = match result {
+        Some(asset) => {
+            let mut response = Response::new(StatusCode::Ok);
+            response.set_body(Body::from_json(&json!({
+                "asset": asset
+            }))?);
+            response
+        },
+        None => {
+            let mut response = Response::new(StatusCode::NotFound);
+            response.set_body(Body::from_json(&json!({
+                "status": "error",
+                "message": "Asset ID not found."
+            }))?);
+            response
+        }
+    };
+
     Ok(res)
 }
 

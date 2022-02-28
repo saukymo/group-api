@@ -33,12 +33,26 @@ pub async fn get_appointment(request: Request<State>) -> Result {
 
     let db_pool = request.state().pool.clone();
 
-    let appointment = Appointment::get_appointment_by_appointment_id(appointment_id, &db_pool).await?;
+    let result = Appointment::get_appointment_by_appointment_id(appointment_id, &db_pool).await?;
 
-    let mut res = Response::new(StatusCode::Ok);
-    res.set_body(Body::from_json(&json!({
-        "appointment": appointment
-    }))?);
+    let res = match result {
+        Some(appointment) => {
+            let mut response = Response::new(StatusCode::Ok);
+            response.set_body(Body::from_json(&json!({
+                "appointment": appointment
+            }))?);
+            response
+        },
+        None => {
+            let mut response = Response::new(StatusCode::NotFound);
+            response.set_body(Body::from_json(&json!({
+                "status": "error",
+                "message": "Appointment id not found."
+            }))?);
+            response
+        }
+    };
+
     Ok(res)
 }
 

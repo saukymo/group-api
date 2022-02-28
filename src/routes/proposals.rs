@@ -33,12 +33,26 @@ pub async fn get_proposal(request: Request<State>) -> Result {
 
     let db_pool = request.state().pool.clone();
 
-    let proposal = Proposal::get_proposal_by_proposal_id(proposal_id, &db_pool).await?;
+    let result = Proposal::get_proposal_by_proposal_id(proposal_id, &db_pool).await?;
 
-    let mut res = Response::new(StatusCode::Ok);
-    res.set_body(Body::from_json(&json!({
-        "proposal": proposal
-     }))?);
+    let res = match result {
+        Some(proposal) => {
+            let mut response = Response::new(StatusCode::Ok);
+            response.set_body(Body::from_json(&json!({
+                "proposal": proposal
+            }))?);
+            response
+        },
+        None => {
+            let mut response = Response::new(StatusCode::NotFound);
+            response.set_body(Body::from_json(&json!({
+                "status": "error",
+                "message": "Proposal ID not found."
+            }))?);
+            response
+        }
+    };
+
     Ok(res)
 }
 

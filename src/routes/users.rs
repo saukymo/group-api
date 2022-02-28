@@ -7,6 +7,7 @@ pub async fn get_users(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();
 
     let users = User::get_users(&db_pool).await?;
+    
     let mut res = Response::new(StatusCode::Ok);
     res.set_body(Body::from_json(&json!({
         "users": users
@@ -38,7 +39,6 @@ pub async fn get_user(request: Request<State>) -> Result {
     
     let result = User::get_user_by_user_id(user_id, &db_pool).await?;
 
-    println!("{:?}", result);
     let res = match result {
         Some(user) => {
             let mut response = Response::new(StatusCode::Ok);
@@ -49,7 +49,7 @@ pub async fn get_user(request: Request<State>) -> Result {
             let mut response = Response::new(StatusCode::NotFound);
             response.set_body(Body::from_json(&json!({
                 "status": "error",
-                "message": "User id not found."
+                "message": "User ID not found."
             }))?);
             response
         }
