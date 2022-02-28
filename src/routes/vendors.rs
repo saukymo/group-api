@@ -46,19 +46,19 @@ pub async fn get_vendor(request: Request<State>) -> Result {
 }
 
 pub async fn update_vendor(request: Request<State>) -> Result {
-    let mut res = Response::new(200);
+    let mut res = Response::new(StatusCode::Ok);
     res.set_body(Body::from_json(&json!({"vendor_id": request.param("vendor_id")?.parse::<i32>()? }))?);
     Ok(res)
 }
 
 pub async fn delete_vendor(request: Request<State>) -> Result {
-    let mut res = Response::new(200);
+    let mut res = Response::new(StatusCode::Ok);
     res.set_body(Body::from_json(&json!({"vendor_id": request.param("vendor_id")?.parse::<i32>()? }))?);
     Ok(res)
 }
 
 pub async fn get_proposals(request: Request<State>) -> Result {
-    let mut res = Response::new(200);
+    let mut res = Response::new(StatusCode::Ok);
     res.set_body(Body::from_json(&json!({"vendor_id": request.param("vendor_id")?.parse::<i32>()? }))?);
     Ok(res)
 }
@@ -70,7 +70,7 @@ pub async fn get_assets(request: Request<State>) -> Result {
 
     let games = Vendor::get_games_by_vendor_id(vendor_id, &db_pool).await?;
 
-    let mut res = Response::new(200);
+    let mut res = Response::new(StatusCode::Ok);
     res.set_body(Body::from_json(&json!({
         "games": games
     }))?);

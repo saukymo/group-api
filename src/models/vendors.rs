@@ -1,6 +1,6 @@
 use tide::prelude::*;
 use sqlx::{query_as, query, PgPool};
-use crate::models::games::{Game, GameID};
+use crate::models::games::Game;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Vendor {
@@ -20,10 +20,10 @@ pub struct NewVendor {
 
 impl Vendor {
     pub async fn add_new_vendor(new_vendor: NewVendor, pg_conn: &PgPool) -> tide::Result<Vendor> {
-        let create_vendor = query_as!(Vendor, r#"INSERT INTO vendors (name, address, avatar) VALUES ($1, $2, $3) RETURNING vendor_id, name, address, avatar
+        let created_vendor = query_as!(Vendor, r#"INSERT INTO vendors (name, address, avatar) VALUES ($1, $2, $3) RETURNING vendor_id, name, address, avatar
     "#, new_vendor.name, new_vendor.address, new_vendor.avatar).fetch_one(pg_conn).await?;
 
-        Ok(create_vendor)
+        Ok(created_vendor)
     }
 
     pub async fn get_vendors(pg_conn: &PgPool) -> tide::Result<Vec<Vendor>> {

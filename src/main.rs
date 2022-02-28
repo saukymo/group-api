@@ -4,41 +4,28 @@ use sqlx::Pool;
 use sqlx::PgPool;
 use tide::{Middleware, Next, Request, Result, Body, StatusCode};
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
 mod routes;
 mod models;
 
+#[skip_serializing_none]
 #[derive(Debug, Serialize, Deserialize)]
 struct GroupResponse { 
-    #[serde(skip_serializing_if = "Option::is_none")]
     path: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     user: Option<models::users::User>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     users: Option<Vec<models::users::User>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     game: Option<models::games::Game>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     games: Option<Vec<models::games::Game>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     proposal: Option<models::proposals::Proposal>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     proposals: Option<Vec<models::proposals::Proposal>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     asset: Option<models::assets::Asset>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     assets: Option<Vec<models::assets::Asset>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     vendor: Option<models::vendors::Vendor>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     vendors: Option<Vec<models::vendors::Vendor>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     appointment: Option<models::appointments::Appointment>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     appointments: Option<Vec<models::appointments::Appointment>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     status: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     message: Option<String>
 }
 
