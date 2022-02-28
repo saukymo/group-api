@@ -1,7 +1,7 @@
 use super::*;
 use tide::Response;
 
-use crate::models::models::{NewVendor, Vendor};
+use crate::models::models::{NewVendor, Vendor, Game, Proposal, Asset};
 
 pub async fn get_vendors(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();
@@ -72,8 +72,30 @@ pub async fn delete_vendor(request: Request<State>) -> Result {
 }
 
 pub async fn get_proposals(request: Request<State>) -> Result {
+    let vendor_id = request.param("vendor_id")?.parse::<i32>()?;
+
+    let db_pool = request.state().pool.clone();
+
+    let proposals = Proposal::get_proposals_by_vendor_id(vendor_id, &db_pool).await?;
+
     let mut res = Response::new(StatusCode::Ok);
-    res.set_body(Body::from_json(&json!({"vendor_id": request.param("vendor_id")?.parse::<i32>()? }))?);
+    res.set_body(Body::from_json(&json!({
+        "proposals": proposals
+    }))?);
+    Ok(res)
+}
+
+pub async fn get_games(request: Request<State>) -> Result {
+    let vendor_id = request.param("vendor_id")?.parse::<i32>()?;
+
+    let db_pool = request.state().pool.clone();
+
+    let games = Game::get_games_by_vendor_id(vendor_id, &db_pool).await?;
+
+    let mut res = Response::new(StatusCode::Ok);
+    res.set_body(Body::from_json(&json!({
+        "games": games
+    }))?);
     Ok(res)
 }
 
@@ -82,11 +104,11 @@ pub async fn get_assets(request: Request<State>) -> Result {
 
     let db_pool = request.state().pool.clone();
 
-    let games = Vendor::get_games_by_vendor_id(vendor_id, &db_pool).await?;
+    let assets = Asset::get_assets_by_vendor_id(vendor_id, &db_pool).await?;
 
     let mut res = Response::new(StatusCode::Ok);
     res.set_body(Body::from_json(&json!({
-        "games": games
+        "assets": assets
     }))?);
     Ok(res)
 }

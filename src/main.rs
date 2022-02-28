@@ -166,13 +166,16 @@ async fn main() -> tide::Result<()> {
             .get(|req| async move { routes::vendors::get_vendor(req).await })
             .patch(|req| async move { routes::vendors::update_vendor(req).await})
             .delete(|req| async move { routes::vendors::delete_vendor(req).await})
-            .at("/assets")
-                .get(|req| async move { routes::vendors::get_assets(req).await });
+            .at("/games")
+                .get(|req| async move { routes::vendors::get_games(req).await });
     app.at("/vendors")
         .at("/:vendor_id")
             .at("/proposals")
                 .get(|req| async move { routes::vendors::get_proposals(req).await });
-
+    app.at("/vendors")
+        .at("/:vendor_id")
+            .at("/assets")
+                .get(|req| async move { routes::vendors::get_assets(req).await });
     app.listen("0.0.0.0:8080").await?;
     Ok(())
 }

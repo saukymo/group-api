@@ -1,6 +1,6 @@
 use sqlx::{query_as, PgPool};
 
-use crate::models::models::{NewGame, Game};
+use crate::models::models::{NewGame, Game, Asset};
 
 impl Game {
     pub async fn add_new_game(new_game: NewGame, pg_conn: &PgPool) -> tide::Result<Game> {
@@ -44,5 +44,27 @@ impl Game {
             FROM games WHERE game_id=$1"#, game_id).fetch_optional(pg_conn).await?;
 
             Ok(game)
+    }
+
+    pub async fn get_games_by_vendor_id(vendor_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<Game>> {
+
+        let games_ids = Asset::get_assets_by_vendor_id(vendor_id, pg_conn).await?
+        .iter()
+        .map(|x| x.game_id)
+        .collect::<Vec<_>>();
+
+        let games = query_as!(Game, r#"
+            SELECT 
+                game_id,
+                name,
+                author,
+                publisher,
+                description,
+                quota,
+                cover
+            FROM games WHERE game_id = ANY($1)
+            "#, &games_ids[..]).fetch_all(pg_conn).await?;
+
+        Ok(games)
     }
 }

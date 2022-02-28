@@ -1,4 +1,4 @@
-use sqlx::{query_as, query, PgPool};
+use sqlx::{query_as, PgPool};
 
 use crate::models::models::{NewAsset, Asset};
 
@@ -55,15 +55,20 @@ impl Asset {
         Ok(asset)
     }
 
-    pub async fn get_game_id_by_vendor_id(vendor_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<i32>> {
-        let games_id = query!(r#"
-        SELECT game_id FROM assets WHERE vendor_id=$1
-        "#, vendor_id).fetch_all(pg_conn)
-        .await?
-        .iter()
-        .map(|x| x.game_id)
-        .collect::<Vec<_>>();
+    pub async fn get_assets_by_vendor_id(vendor_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<Asset>> {
+        let assets = query_as!(Asset, r#"
+        SELECT 
+            asset_id,
+            vendor_id,
+            game_id,
+            price
+        FROM assets
+        WHERE
+            vendor_id=$1
+        "#,
+        vendor_id)
+        .fetch_all(pg_conn).await?;
 
-        Ok(games_id)
+        Ok(assets)
     }
 }

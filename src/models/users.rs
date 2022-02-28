@@ -28,8 +28,4 @@ impl User {
 
         Ok(user)
     }
-
-    // pub async fn get_appoinments_by_user_id(user_id: i32, pg_conn: &PgPool) -> tide::Result<Option<Appointment>> {
-
-    // }
 }
