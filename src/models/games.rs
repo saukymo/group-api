@@ -48,7 +48,7 @@ impl Game {
 
     pub async fn get_games_by_vendor_id(vendor_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<Game>> {
 
-        let games_ids = Asset::get_assets_by_vendor_id(vendor_id, pg_conn).await?
+        let game_ids = Asset::get_assets_by_vendor_id(vendor_id, pg_conn).await?
         .iter()
         .map(|x| x.game_id)
         .collect::<Vec<_>>();
@@ -63,7 +63,7 @@ impl Game {
                 quota,
                 cover
             FROM games WHERE game_id = ANY($1)
-            "#, &games_ids[..]).fetch_all(pg_conn).await?;
+            "#, &game_ids[..]).fetch_all(pg_conn).await?;
 
         Ok(games)
     }

@@ -1,6 +1,6 @@
 use sqlx::{query_as, PgPool};
 
-use crate::models::models::{NewProposal, Proposal};
+use crate::models::models::{NewProposal, Proposal, Asset};
 
 impl Proposal {
     pub async fn add_new_proposal(new_proposal: NewProposal, pg_conn: &PgPool) -> tide::Result<Proposal> {
@@ -59,6 +59,23 @@ impl Proposal {
             WHERE 
             asset_id=$1
         "#, asset_id).fetch_all(pg_conn).await?;
+
+        Ok(proposals)
+    }
+
+    pub async fn get_proposals_by_game_id(game_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<Proposal>> {
+        let asset_ids = Asset::get_assets_by_game_id(game_id, pg_conn).await?
+        .iter()
+        .map(|x| x.asset_id)
+        .collect::<Vec<_>>();
+
+        let proposals = query_as!(Proposal, r#"
+            SELECT 
+            proposal_id, vendor_id, asset_id, price, date_time, quota 
+            FROM proposals 
+            WHERE 
+            asset_id= ANY($1)
+        "#, &asset_ids[..]).fetch_all(pg_conn).await?;
 
         Ok(proposals)
     }

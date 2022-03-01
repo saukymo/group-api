@@ -1,7 +1,7 @@
 use super::*;
 use tide::Response;
 
-use crate::models::models::{NewProposal, Proposal};
+use crate::models::models::{NewProposal, Proposal, Appointment};
 
 pub async fn get_proposals(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();
@@ -69,7 +69,15 @@ pub async fn delete_proposal(request: Request<State>) -> Result {
 }
 
 pub async fn get_appointments(request: Request<State>) -> Result {
+    let proposal_id = request.param("proposal_id")?.parse::<i32>()?;
+
+    let db_pool = request.state().pool.clone();
+
+    let appointments = Appointment::get_appointments_by_proposal_id(proposal_id, &db_pool).await?;
+
     let mut res = Response::new(StatusCode::Ok);
-    res.set_body(Body::from_json(&json!({"proposal_id": request.param("proposal_id")?.parse::<i32>()? }))?);
+    res.set_body(Body::from_json(&json!({
+        "appointments": appointments
+    }))?);
     Ok(res)
 }

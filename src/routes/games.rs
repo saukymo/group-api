@@ -1,7 +1,7 @@
 use super::*;
 use tide::Response;
 
-use crate::models::models::{NewGame, Game};
+use crate::models::models::{NewGame, Game, Vendor, Proposal};
 
 pub async fn get_games(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();
@@ -72,14 +72,29 @@ pub async fn delete_game(request: Request<State>) -> Result {
 }
 
 pub async fn get_proposals(request: Request<State>) -> Result {
+    let game_id = request.param("game_id")?.parse::<i32>()?;
+
+    let db_pool = request.state().pool.clone();
+
+    let proposals = Proposal::get_proposals_by_game_id(game_id, &db_pool).await?;
+
     let mut res = Response::new(StatusCode::Ok);
-    res.set_body(Body::from_json(&json!({"game_id": request.param("game_id")?.parse::<i32>()? }))?);
+    res.set_body(Body::from_json(&json!({
+        "proposals": proposals
+    }))?);
     Ok(res)
 }
 
 pub async fn get_vendors(request: Request<State>) -> Result {
+    let game_id = request.param("game_id")?.parse::<i32>()?;
+
+    let db_pool = request.state().pool.clone();
+
+    let vendors = Vendor::get_vendors_by_game_id(game_id, &db_pool).await?;
+
     let mut res = Response::new(StatusCode::Ok);
-    println!("{:?}", request.param("game_id")?);
-    res.set_body(Body::from_json(&json!({"game_id": request.param("game_id")?.parse::<i32>()? }))?);
+    res.set_body(Body::from_json(&json!({
+        "vendors": vendors
+    }))?);
     Ok(res)
 }

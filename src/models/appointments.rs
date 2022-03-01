@@ -44,6 +44,21 @@ impl Appointment {
         Ok(appointment)
     }
 
+    pub async fn get_appointments_by_proposal_id(proposal_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<Appointment>> {
+        let appointments = query_as!(Appointment, r#"
+        SELECT 
+            appointment_id,
+            proposal_id,
+            user_id
+        FROM appointments
+        WHERE proposal_id=$1
+        "#, proposal_id)
+        .fetch_all(pg_conn)
+        .await?;
+
+        Ok(appointments)
+    }
+
     pub async fn get_appointments_by_user_id(user_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<Appointment>> {
         let appointments = query_as!(Appointment, r#"
         SELECT 
@@ -58,4 +73,6 @@ impl Appointment {
 
         Ok(appointments)
     }
+
+
 }

@@ -71,4 +71,21 @@ impl Asset {
 
         Ok(assets)
     }
+
+    pub async fn get_assets_by_game_id(game_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<Asset>> {
+        let assets = query_as!(Asset, r#"
+        SELECT 
+            asset_id,
+            vendor_id,
+            game_id,
+            price
+        FROM assets
+        WHERE
+            game_id=$1
+        "#,
+        game_id)
+        .fetch_all(pg_conn).await?;
+
+        Ok(assets)
+    }
 }
