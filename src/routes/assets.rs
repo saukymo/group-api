@@ -1,7 +1,7 @@
 use super::*;
 use tide::Response;
 
-use crate::models::models::{NewAsset, Asset};
+use crate::models::models::{NewAsset, Asset, Proposal};
 
 pub async fn get_assets(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();
@@ -71,7 +71,15 @@ pub async fn delete_asset(request: Request<State>) -> Result {
 }
 
 pub async fn get_proposals(request: Request<State>) -> Result {
+    let asset_id = request.param("asset_id")?.parse::<i32>()?;
+    
+    let db_pool = request.state().pool.clone();
+
+    let proposals = Proposal::get_proposals_by_asset_id(asset_id, &db_pool).await?;
+
     let mut res = Response::new(StatusCode::Ok);
-    res.set_body(Body::from_json(&json!({"asset_id": request.param("asset_id")?.parse::<i32>()? }))?);
+    res.set_body(Body::from_json(&json!({
+        "proposals": proposals
+    }))?);
     Ok(res)
 }

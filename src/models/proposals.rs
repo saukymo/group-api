@@ -50,4 +50,16 @@ impl Proposal {
 
         Ok(proposals)
     }
+
+    pub async fn get_proposals_by_asset_id(asset_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<Proposal>> {
+        let proposals = query_as!(Proposal, r#"
+            SELECT 
+            proposal_id, vendor_id, asset_id, price, date_time, quota 
+            FROM proposals 
+            WHERE 
+            asset_id=$1
+        "#, asset_id).fetch_all(pg_conn).await?;
+
+        Ok(proposals)
+    }
 }
