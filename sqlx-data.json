@@ -1,0 +1,1128 @@
+{
+  "db": "PostgreSQL",
+  "0624c3163244f7afaef5024829b7e7564be71ff58e1edf082dc8649cd92261d7": {
+    "describe": {
+      "columns": [
+        {
+          "name": "appointment_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "proposal_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "user_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n        SELECT \n            appointment_id,\n            proposal_id,\n            user_id\n        FROM appointments\n        WHERE proposal_id=$1\n        "
+  },
+  "0af022a1aff1fe4c85618183597e0feade75344bd814971eae1a0bc304a20c37": {
+    "describe": {
+      "columns": [
+        {
+          "name": "proposal_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "date_time",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "quota",
+          "ordinal": 5,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n            SELECT \n            proposal_id, vendor_id, asset_id, price, date_time, quota \n            FROM proposals \n            WHERE proposal_id=$1\n        "
+  },
+  "1129b99734af6b8696d8f9d2f0657695ba960a676e3db5bd6440dbe543e5cf93": {
+    "describe": {
+      "columns": [
+        {
+          "name": "proposal_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "date_time",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "quota",
+          "ordinal": 5,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n            SELECT \n            proposal_id, vendor_id, asset_id, price, date_time, quota \n            FROM proposals \n            WHERE \n            asset_id=$1\n        "
+  },
+  "19ef6349f17a7e4150e6d33a6a0254b524da1824db764423100d79815de6fa20": {
+    "describe": {
+      "columns": [
+        {
+          "name": "user_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "wx_open_id",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "INSERT INTO users (name, wx_open_id) VALUES ($1, $2) RETURNING user_id, name, wx_open_id\n    "
+  },
+  "21c4f3edc987b9d9bfde2047d7b464be518093103e6d3f58e856657c2ab1472b": {
+    "describe": {
+      "columns": [
+        {
+          "name": "appointment_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "proposal_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "user_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4",
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n        INSERT INTO appointments\n        (proposal_id, user_id)\n        VALUES\n        ($1, $2)\n        RETURNING appointment_id, proposal_id, user_id\n        "
+  },
+  "31ad6c97a24771953acaf5ff0115a61f5c139b94e6f97483364a9192290d2d6b": {
+    "describe": {
+      "columns": [
+        {
+          "name": "game_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "author",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "publisher",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "description",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "quota",
+          "ordinal": 5,
+          "type_info": "Int4"
+        },
+        {
+          "name": "cover",
+          "ordinal": 6,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "SELECT game_id, name, author, publisher, description, quota, cover FROM games"
+  },
+  "34421c1d788373c9dc830cee2a2342b312a56017497d6d076c33e5d9780f6157": {
+    "describe": {
+      "columns": [
+        {
+          "name": "asset_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "game_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n        SELECT \n            asset_id,\n            vendor_id,\n            game_id,\n            price\n        FROM assets\n        WHERE\n            asset_id=$1\n        "
+  },
+  "386113b945838958f9e61385743c453ba6a284c5858ab8b6e69fc9813b86ace4": {
+    "describe": {
+      "columns": [
+        {
+          "name": "proposal_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "date_time",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "quota",
+          "ordinal": 5,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4",
+          "Int4",
+          "Int4",
+          "Timestamptz",
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO proposals \n            (vendor_id, asset_id, price, date_time, quota) \n            VALUES \n            ($1, $2, $3, $4, $5) \n            RETURNING \n            proposal_id, vendor_id, asset_id, price, date_time, quota\n        "
+  },
+  "3c703600b76d63752aa6a2b6e037e0fca70a88a26adaccc58fd5ebaca0915a2f": {
+    "describe": {
+      "columns": [
+        {
+          "name": "vendor_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "address",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "avatar",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "SELECT vendor_id, name, address, avatar FROM vendors WHERE vendor_id=$1"
+  },
+  "42367b1c5a0a86d66e24ec67eec10f14a162a5a63bd8e1cadbc0cffb7c7e6ce6": {
+    "describe": {
+      "columns": [
+        {
+          "name": "user_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "wx_open_id",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "SELECT user_id, name, wx_open_id FROM users where user_id=$1"
+  },
+  "5a7745436929d289ec627d8a9081b1b049ae333cd01ddc502164a7790e88e178": {
+    "describe": {
+      "columns": [
+        {
+          "name": "user_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "wx_open_id",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "SELECT user_id, name, wx_open_id FROM users"
+  },
+  "5b1cc8b9d147776b8d2be7ed71dd950c575005fdce0c8fc03af488eca104069e": {
+    "describe": {
+      "columns": [
+        {
+          "name": "vendor_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "address",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "avatar",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true,
+        true
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "SELECT vendor_id, name, address, avatar FROM vendors"
+  },
+  "5c03af165d39e00a2fea1b7aedf4b6bd87b37c2ad573c5f952070e0d487ac720": {
+    "describe": {
+      "columns": [
+        {
+          "name": "vendor_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "address",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "avatar",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Varchar",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "INSERT INTO vendors (name, address, avatar) VALUES ($1, $2, $3) RETURNING vendor_id, name, address, avatar\n    "
+  },
+  "630a675329c8156ac9c11a896deaeabf53e46b62fdff42c5b0c7f2ad9191109c": {
+    "describe": {
+      "columns": [
+        {
+          "name": "game_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "author",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "publisher",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "description",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "quota",
+          "ordinal": 5,
+          "type_info": "Int4"
+        },
+        {
+          "name": "cover",
+          "ordinal": 6,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Varchar",
+          "Varchar",
+          "Text",
+          "Int4",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "\n        INSERT INTO games (\n            name,\n            author,\n            publisher,\n            description,\n            quota,\n            cover\n        ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING \n            game_id,\n            name,\n            author,\n            publisher,\n            description,\n            quota,\n            cover\n        "
+  },
+  "6c8ebf35dc62c354c9328bac95e8e9065bf1e663e1ee08f8eb11ec68d0400a2b": {
+    "describe": {
+      "columns": [
+        {
+          "name": "proposal_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "date_time",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "quota",
+          "ordinal": 5,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n            SELECT \n            proposal_id, vendor_id, asset_id, price, date_time, quota \n            FROM proposals \n            WHERE \n            vendor_id=$1\n        "
+  },
+  "7294c653080c94536fc53970b2206869a2fda854fab7d62541f063329bd2fa59": {
+    "describe": {
+      "columns": [
+        {
+          "name": "vendor_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "address",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "avatar",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Int4Array"
+        ]
+      }
+    },
+    "query": "\n        SELECT \n            vendor_id,\n            name,\n            address,\n            avatar\n        FROM vendors\n        WHERE vendor_id = ANY($1)\n        "
+  },
+  "b0b17419363b9510221e0fc0444d2daa9cff02f0329fe01490051e677c0d262f": {
+    "describe": {
+      "columns": [
+        {
+          "name": "proposal_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "date_time",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "quota",
+          "ordinal": 5,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\n            SELECT \n            proposal_id, vendor_id, asset_id, price, date_time, quota \n            FROM proposals\n        "
+  },
+  "d1d15f7deb4a527ff57c9a429a645e062a22a87dd19db9e8a5966eb730e6ffc7": {
+    "describe": {
+      "columns": [
+        {
+          "name": "asset_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "game_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4",
+          "Int4",
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO assets (\n                vendor_id,\n                game_id,\n                price\n            ) VALUES ($1, $2, $3) RETURNING \n                asset_id,\n                vendor_id,\n                game_id,\n                price\n        "
+  },
+  "d782398552ef430bc2fd604f22cea6468c7b492315b5f341587cac872d9d8cbc": {
+    "describe": {
+      "columns": [
+        {
+          "name": "appointment_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "proposal_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "user_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\n        SELECT \n            appointment_id,\n            proposal_id,\n            user_id\n        FROM appointments\n        "
+  },
+  "db8811e4e5e86993d58b584cbffc94a3b87454d60cb61485af3fbc42d3807688": {
+    "describe": {
+      "columns": [
+        {
+          "name": "asset_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "game_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n        SELECT \n            asset_id,\n            vendor_id,\n            game_id,\n            price\n        FROM assets\n        WHERE\n            vendor_id=$1\n        "
+  },
+  "e1c1d00c697fd4cf8ef64b010d336137d6fc6aa02f1e55985988d6a57b300954": {
+    "describe": {
+      "columns": [
+        {
+          "name": "proposal_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "date_time",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "quota",
+          "ordinal": 5,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4Array"
+        ]
+      }
+    },
+    "query": "\n            SELECT \n            proposal_id, vendor_id, asset_id, price, date_time, quota \n            FROM proposals \n            WHERE \n            asset_id= ANY($1)\n        "
+  },
+  "ec3e0551f8e7a3b781582ac9aa40f3d8d8959f4e8ecd119a3bf7e1e386bab3ee": {
+    "describe": {
+      "columns": [
+        {
+          "name": "asset_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "game_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\n        SELECT \n            asset_id,\n            vendor_id,\n            game_id,\n            price\n        FROM assets\n        "
+  },
+  "ede18a367df30d7427fa0b0a04fcfbf942cfe3baf13abc8cc1f0cb14627084e6": {
+    "describe": {
+      "columns": [
+        {
+          "name": "appointment_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "proposal_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "user_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n        SELECT \n            appointment_id,\n            proposal_id,\n            user_id\n        FROM appointments\n        WHERE user_id=$1\n        "
+  },
+  "f0a386a85db778c54f3be4ca4561a46b91746b60531e2be78bd9da98b6e32947": {
+    "describe": {
+      "columns": [
+        {
+          "name": "game_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "author",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "publisher",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "description",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "quota",
+          "ordinal": 5,
+          "type_info": "Int4"
+        },
+        {
+          "name": "cover",
+          "ordinal": 6,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "SELECT \n            game_id,\n            name,\n            author,\n            publisher,\n            description,\n            quota,\n            cover\n            FROM games WHERE game_id=$1"
+  },
+  "f2168e321c3240ea004d889e31853e70b73aea5b03ba6655f081beac4d2b3b3d": {
+    "describe": {
+      "columns": [
+        {
+          "name": "appointment_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "proposal_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "user_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n        SELECT \n            appointment_id,\n            proposal_id,\n            user_id\n        FROM appointments\n        WHERE appointment_id=$1\n        "
+  },
+  "f27775dd2b7444e160d30aa83be88171687700b9ed4910f796258994791bdaeb": {
+    "describe": {
+      "columns": [
+        {
+          "name": "game_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "author",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "publisher",
+          "ordinal": 3,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "description",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "quota",
+          "ordinal": 5,
+          "type_info": "Int4"
+        },
+        {
+          "name": "cover",
+          "ordinal": 6,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Int4Array"
+        ]
+      }
+    },
+    "query": "\n            SELECT \n                game_id,\n                name,\n                author,\n                publisher,\n                description,\n                quota,\n                cover\n            FROM games WHERE game_id = ANY($1)\n            "
+  },
+  "f4df9b2f1bf9b3e7b5282906bec8e5d0bb0bd1079d03b202a3b1a061584f7ccd": {
+    "describe": {
+      "columns": [
+        {
+          "name": "asset_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "game_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n        SELECT \n            asset_id,\n            vendor_id,\n            game_id,\n            price\n        FROM assets\n        WHERE\n            game_id=$1\n        "
+  }
+}

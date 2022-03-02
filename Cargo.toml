@@ -9,7 +9,7 @@ edition = "2021"
 tide = "0.16.0"
 async-std = { version = "1.10.0", features = ["attributes"] }
 serde = { version = "1.0", features = ["derive"] }
-sqlx = {version = "0.5.10", features = ["runtime-async-std-rustls", "postgres", "chrono"] }
+sqlx = {version = "0.5.10", features = ["runtime-async-std-rustls", "postgres", "chrono", "offline"] }
 serde_with = {version = "1.12.0", features = ["json", "chrono"]}
 dotenv = "0.15.0"
 chrono = "0.4.19"
