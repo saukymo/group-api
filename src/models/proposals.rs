@@ -1,4 +1,6 @@
-use sqlx::{query_as, PgPool};
+use sqlx::{query_as, query, PgPool};
+use json_patch::{patch, Patch};
+use serde_json;
 
 use crate::models::models::{NewProposal, Proposal, Asset};
 
@@ -17,6 +19,33 @@ impl Proposal {
 
         Ok(created_proposal)
     }
+
+    pub async fn update_proposals_by_proposal_id(mut proposal: Proposal, operations: Patch, pg_conn: &PgPool) -> tide::Result<Proposal> {
+        let mut proposal_json = serde_json::to_value(proposal)?;
+        patch(&mut proposal_json, &operations)?;
+
+        proposal = serde_json::from_value(proposal_json)?;
+        query!(
+            r#"
+                UPDATE proposals
+                SET 
+                    vendor_id=$2,
+                    asset_id=$3,
+                    price=$4,
+                    date_time=$5,
+                    quota=$6
+                WHERE 
+                    proposal_id=$1
+            "#,
+            proposal.proposal_id,
+            proposal.vendor_id,
+            proposal.asset_id,
+            proposal.price,
+            proposal.date_time,
+            proposal.quota
+        ).execute(pg_conn).await?;
+        Ok(proposal)
+    } 
 
     pub async fn get_proposals(pg_conn: &PgPool) -> tide::Result<Vec<Proposal>> {
         let proposals = query_as!(Proposal, r#"
@@ -78,5 +107,5 @@ impl Proposal {
         "#, &asset_ids[..]).fetch_all(pg_conn).await?;
 
         Ok(proposals)
-    }
+    }   
 }

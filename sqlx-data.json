@@ -520,6 +520,23 @@
     },
     "query": "INSERT INTO vendors (name, address, avatar) VALUES ($1, $2, $3) RETURNING vendor_id, name, address, avatar\n    "
   },
+  "5d9f9493da20cbb1694d3c0dd4f9848d35652ed87d0590b580da7b942292977a": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Int4",
+          "Int4",
+          "Int4",
+          "Int4",
+          "Timestamptz",
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n                UPDATE proposals\n                SET \n                    vendor_id=$2,\n                    asset_id=$3,\n                    price=$4,\n                    date_time=$5,\n                    quota=$6\n                WHERE \n                    proposal_id=$1\n            "
+  },
   "630a675329c8156ac9c11a896deaeabf53e46b62fdff42c5b0c7f2ad9191109c": {
     "describe": {
       "columns": [
