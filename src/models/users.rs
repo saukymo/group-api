@@ -1,6 +1,6 @@
 use sqlx::{query_as, PgPool};
 
-use crate::models::models::{NewUser, User};
+use crate::models::models::{NewUser, User, Appointment};
 
 impl User {
 
@@ -27,5 +27,24 @@ impl User {
         let user = query_as!(User, r#"SELECT user_id, name, wx_open_id FROM users where user_id=$1"#, user_id).fetch_optional(pg_conn).await?;
 
         Ok(user)
+    }
+
+    pub async fn get_users_by_proposal_id(proposal_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<User>> {
+        let user_ids = Appointment::get_appointments_by_proposal_id(proposal_id, pg_conn).await?
+        .iter()
+        .map(|x| x.user_id)
+        .collect::<Vec<_>>();
+
+        let users = query_as!(User, r#"
+            SELECT 
+                user_id, 
+                name, 
+                wx_open_id 
+            FROM 
+                users
+            WHERE 
+                user_id = ANY($1)"#, &user_ids[..]).fetch_all(pg_conn).await?;
+
+        Ok(users)
     }
 }

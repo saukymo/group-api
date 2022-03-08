@@ -2,7 +2,7 @@ use sqlx::{query_as, query, PgPool};
 use json_patch::{patch, Patch};
 use serde_json;
 
-use crate::models::models::{NewProposal, Proposal, Asset};
+use crate::models::models::{NewProposal, Proposal, Asset, Appointment};
 
 impl Proposal {
     pub async fn add_new_proposal(new_proposal: NewProposal, pg_conn: &PgPool) -> tide::Result<Proposal> {
@@ -107,5 +107,22 @@ impl Proposal {
         "#, &asset_ids[..]).fetch_all(pg_conn).await?;
 
         Ok(proposals)
-    }   
+    }  
+    
+    pub async fn get_proposals_by_user_id(user_id: i32, pg_conn: &PgPool) -> tide::Result<Vec<Proposal>> {
+        let proposal_ids = Appointment::get_appointments_by_user_id(user_id, pg_conn).await?
+        .iter()
+        .map(|x| x.proposal_id)
+        .collect::<Vec<_>>();
+
+        let proposals = query_as!(Proposal, r#"
+            SELECT 
+            proposal_id, vendor_id, asset_id, price, date_time, quota 
+            FROM proposals 
+            WHERE 
+            proposal_id = ANY($1)
+        "#, &proposal_ids[..]).fetch_all(pg_conn).await?;
+
+        Ok(proposals)
+    }  
 }

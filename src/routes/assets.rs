@@ -1,7 +1,7 @@
 use super::*;
 use tide::Response;
 
-use crate::models::models::{NewAsset, Asset, Proposal};
+use crate::models::models::{NewAsset, Asset, Proposal, Game, Vendor};
 
 pub async fn get_assets(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();
@@ -39,9 +39,15 @@ pub async fn get_asset(request: Request<State>) -> Result {
 
     let res = match result {
         Some(asset) => {
+
+            let game = Game::get_game_by_game_id(asset.game_id, &db_pool).await?;
+            let vendor = Vendor::get_vendor_by_vendor_id(asset.vendor_id, &db_pool).await?;
+
             let mut response = Response::new(StatusCode::Ok);
             response.set_body(Body::from_json(&json!({
-                "asset": asset
+                "asset": asset,
+                "game": game,
+                "vendor": vendor
             }))?);
             response
         },

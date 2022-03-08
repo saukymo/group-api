@@ -1,5 +1,6 @@
 use dotenv::dotenv;
 use tide::prelude::*;
+use models::models::*;
 use sqlx::Pool;
 use sqlx::PgPool;
 use tide::{Middleware, Next, Request, Result, Body, StatusCode};
@@ -13,20 +14,21 @@ mod models;
 #[derive(Debug, Serialize, Deserialize)]
 struct GroupResponse { 
     path: Option<String>,
-    user: Option<models::models::User>,
-    users: Option<Vec<models::models::User>>,
-    game: Option<models::models::Game>,
-    games: Option<Vec<models::models::Game>>,
-    proposal: Option<models::models::Proposal>,
-    proposals: Option<Vec<models::models::Proposal>>,
-    asset: Option<models::models::Asset>,
-    assets: Option<Vec<models::models::Asset>>,
-    vendor: Option<models::models::Vendor>,
-    vendors: Option<Vec<models::models::Vendor>>,
-    appointment: Option<models::models::Appointment>,
-    appointments: Option<Vec<models::models::Appointment>>,
+    user: Option<User>,
+    users: Option<Vec<User>>,
+    game: Option<Game>,
+    games: Option<Vec<Game>>,
+    proposal: Option<Proposal>,
+    proposals: Option<Vec<Proposal>>,
+    asset: Option<Asset>,
+    assets: Option<Vec<Asset>>,
+    vendor: Option<Vendor>,
+    vendors: Option<Vec<Vendor>>,
+    appointment: Option<Appointment>,
+    appointments: Option<Vec<Appointment>>,
     status: Option<String>,
-    message: Option<String>
+    message: Option<String>,
+    session: Option<WxLoginResponse>
 }
 
 
@@ -109,7 +111,12 @@ async fn main() -> tide::Result<()> {
             .delete(|req| async move { routes::users::delete_user(req).await})
             .at("/appointments")
                 .get(|req| async move { routes::users::get_appointments(req).await });
-
+    app.at("/users")
+        .at(":user_id")
+            .at("/proposals")
+                .get(|req| async move {
+                    routes::users::get_proposals(req).await
+                });
     app.at("/games")
         .get(|req| async move { routes::games::get_games(req).await })
         .post(|req| async move { routes::games::create_game(req).await })
@@ -129,11 +136,14 @@ async fn main() -> tide::Result<()> {
     app.at("/appointments")
         .get(|req| async move { routes::appointments::get_appointments(req).await })
         .post(|req| async move { routes::appointments::create_appointment(req).await })
+        .delete(|req| async move {
+            routes::appointments::delete_appointment_by_user_and_proposal_id(req).await
+        })
         .at("/:appointment_id")
             .get(|req| async move { routes::appointments::get_appointment(req).await })
             .patch(|req| async move { routes::appointments::update_appointment(req).await})
             // Only user, owner or admins can delete appointment.
-            .delete(|req| async move { routes::appointments::delete_appointment(req).await});
+            .delete(|req| async move { routes::appointments::delete_appointment_by_appointment_id(req).await});
 
     // // proposal is belong to a asset so that is also belong to a vendor
     app.at("/proposals")
@@ -176,6 +186,9 @@ async fn main() -> tide::Result<()> {
         .at("/:vendor_id")
             .at("/assets")
                 .get(|req| async move { routes::vendors::get_assets(req).await });
+
+    app.at("/login").get(|req| async move { routes::users::login(req).await});
+
     app.listen("0.0.0.0:8080").await?;
     Ok(())
 }

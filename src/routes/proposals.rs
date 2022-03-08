@@ -2,7 +2,7 @@ use super::*;
 use std::future::Future;
 use tide::Response;
 
-use crate::models::models::{NewProposal, Proposal, Appointment};
+use crate::models::models::{NewProposal, Proposal, Appointment, Game, Vendor};
 
 pub async fn get_proposals(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();
@@ -30,7 +30,7 @@ pub async fn create_proposal(mut request: Request<State>) -> Result {
 }
 
 pub async fn get_proposal(request: Request<State>) -> Result {
-    check_proposal_id_before(proposal_to_response, request).await
+    check_proposal_id_before(get_proposal_by_proposal_id, request).await
 }
 
 pub async fn update_proposal(request: Request<State>) -> Result {
@@ -73,6 +73,28 @@ async fn get_appointments_by_proposal_id(proposal: Proposal, request: Request<St
     }))?);
 
     Ok(response)
+}
+
+async fn get_proposal_by_proposal_id(proposal: Proposal, request: Request<State>) -> Result {
+    let db_pool = request.state().pool.clone();
+
+    let asset = Asset::get_asset_by_asset_id(proposal.asset_id, &db_pool).await?.unwrap();
+    let game = Game::get_game_by_game_id(asset.game_id, &db_pool).await?;
+    let vendor = Vendor::get_vendor_by_vendor_id(asset.vendor_id, &db_pool).await?;
+    let appointments = Appointment::get_appointments_by_proposal_id(proposal.proposal_id, &db_pool).await?;
+    let users = User::get_users_by_proposal_id(proposal.proposal_id, &db_pool).await?;
+
+    let mut response = Response::new(StatusCode::Ok);
+    response.set_body(Body::from_json(&json!({
+        "proposal": proposal,
+        "asset": asset,
+        "game": game,
+        "vendor": vendor,
+        "appointments": appointments,
+        "users": users
+    }))?);
+    Ok(response)
+
 }
 
 async fn update_proposals_by_proposal_id(mut proposal: Proposal, mut request: Request<State>) -> Result {

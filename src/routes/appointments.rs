@@ -1,7 +1,7 @@
 use super::*;
 use tide::Response;
 
-use crate::models::models::{NewAppointment, Appointment};
+use crate::models::models::{NewAppointment, Appointment, AppointmentQuery};
 
 pub async fn get_appointments(request: Request<State>) -> Result {
     let db_pool = request.state().pool.clone();
@@ -62,8 +62,24 @@ pub async fn update_appointment(request: Request<State>) -> Result {
     Ok(res)
 }
 
-pub async fn delete_appointment(request: Request<State>) -> Result {
+pub async fn delete_appointment_by_appointment_id(request: Request<State>) -> Result {
     let mut res = Response::new(StatusCode::Ok);
     res.set_body(Body::from_json(&json!({"appointment_id": request.param("appointment_id")?.parse::<i32>()? }))?);
+    Ok(res)
+}
+
+pub async fn delete_appointment_by_user_and_proposal_id(request: Request<State>) -> Result {
+    let query: AppointmentQuery = request.query()?;
+    let proposal_id = query.proposal_id.unwrap();
+    let user_id = query.user_id.unwrap();
+
+    let db_pool = request.state().pool.clone();
+
+    let appointment = Appointment::delete_appointment_by_user_and_proposal_id(user_id, proposal_id, &db_pool).await?;
+
+    let mut res = Response::new(StatusCode::Ok);
+    res.set_body(Body::from_json(&json!({
+        "appointment": appointment 
+    }))?);
     Ok(res)
 }

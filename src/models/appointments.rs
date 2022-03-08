@@ -74,5 +74,22 @@ impl Appointment {
         Ok(appointments)
     }
 
+    pub async fn delete_appointment_by_user_and_proposal_id(user_id: i32, proposal_id: i32, pg_conn: &PgPool) -> tide::Result<Appointment> {
+        let appointment = query_as!(Appointment, r#"
+        DELETE FROM appointments
+        WHERE
+            user_id=$1 
+            AND
+            proposal_id=$2
+        RETURNING 
+            appointment_id, 
+            proposal_id, 
+            user_id
+        "#, user_id, proposal_id)
+        .fetch_one(pg_conn)
+        .await?;
+
+        Ok(appointment)
+    }
 
 }

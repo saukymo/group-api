@@ -101,3 +101,22 @@ pub struct NewVendor {
     pub address: Option<String>,
     pub avatar: Option<String>
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WxLoginResponse {
+    pub openid: String,
+    pub session_key: String,
+    pub unionid: Option<String>
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WxLoginRequest {
+    pub code: String
+}
+
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AppointmentQuery {
+    pub proposal_id: Option<i32>,
+    pub user_id: Option<i32>
+}

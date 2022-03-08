@@ -1,5 +1,37 @@
 {
   "db": "PostgreSQL",
+  "02f839ab9baacd35ba345573910df07aee6d0eef36f58fd423fe2115173ef4bc": {
+    "describe": {
+      "columns": [
+        {
+          "name": "user_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "wx_open_id",
+          "ordinal": 2,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Int4Array"
+        ]
+      }
+    },
+    "query": "\n            SELECT \n                user_id, \n                name, \n                wx_open_id \n            FROM \n                users\n            WHERE \n                user_id = ANY($1)"
+  },
   "0624c3163244f7afaef5024829b7e7564be71ff58e1edf082dc8649cd92261d7": {
     "describe": {
       "columns": [
@@ -413,6 +445,39 @@
       }
     },
     "query": "SELECT user_id, name, wx_open_id FROM users where user_id=$1"
+  },
+  "4cc045cf8075a4a4d501f30eda3a49b91a1d8234596d637ccef3563755d53ec4": {
+    "describe": {
+      "columns": [
+        {
+          "name": "appointment_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "proposal_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "user_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4",
+          "Int4"
+        ]
+      }
+    },
+    "query": "\n        DELETE FROM appointments\n        WHERE\n            user_id=$1 \n            AND\n            proposal_id=$2\n        RETURNING \n            appointment_id, \n            proposal_id, \n            user_id\n        "
   },
   "5a7745436929d289ec627d8a9081b1b049ae333cd01ddc502164a7790e88e178": {
     "describe": {
@@ -1047,6 +1112,56 @@
       }
     },
     "query": "\n        SELECT \n            appointment_id,\n            proposal_id,\n            user_id\n        FROM appointments\n        WHERE appointment_id=$1\n        "
+  },
+  "f275760d5a3df952c41d69d372c9d0205efa9b81c4c93d22068243bbb00d13a2": {
+    "describe": {
+      "columns": [
+        {
+          "name": "proposal_id",
+          "ordinal": 0,
+          "type_info": "Int4"
+        },
+        {
+          "name": "vendor_id",
+          "ordinal": 1,
+          "type_info": "Int4"
+        },
+        {
+          "name": "asset_id",
+          "ordinal": 2,
+          "type_info": "Int4"
+        },
+        {
+          "name": "price",
+          "ordinal": 3,
+          "type_info": "Int4"
+        },
+        {
+          "name": "date_time",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        },
+        {
+          "name": "quota",
+          "ordinal": 5,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4Array"
+        ]
+      }
+    },
+    "query": "\n            SELECT \n            proposal_id, vendor_id, asset_id, price, date_time, quota \n            FROM proposals \n            WHERE \n            proposal_id = ANY($1)\n        "
   },
   "f27775dd2b7444e160d30aa83be88171687700b9ed4910f796258994791bdaeb": {
     "describe": {
